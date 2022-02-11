@@ -7,7 +7,7 @@ import (
 
 func main() {
 
-  secretName := "/" + os.Getenv("ORG_ID") + "/" + os.Getenv("ENVIRON") + "/" + os.Getenv("PROJECT_NAME") + "-secrets" // Ex - /myorg/stg/testsecret-secrets
+        secretName := "/" + os.Getenv("ORG_ID") + "/" + os.Getenv("ENVIRON") + "/" + os.Getenv("PROJECT_NAME") + "-secrets" // Ex - /myorg/stg/testsecret-secrets
 	secretRegion := os.Getenv("AWS_DEFAULT_REGION")
 	GetSecret(secretName, secretRegion)
 
