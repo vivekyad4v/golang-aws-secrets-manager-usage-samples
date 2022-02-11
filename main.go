@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-
+	// Environment variables to be exported - ORG_ID, ENVIRON, PROJECT_NAME, AWS_DEFAULT_REGION, RUNNING_ON_LOCAL(yes, no)
         secretName := "/" + os.Getenv("ORG_ID") + "/" + os.Getenv("ENVIRON") + "/" + os.Getenv("PROJECT_NAME") + "-secrets" // Ex - /myorg/stg/testsecret-secrets
 	secretRegion := os.Getenv("AWS_DEFAULT_REGION")
 	GetSecret(secretName, secretRegion)
