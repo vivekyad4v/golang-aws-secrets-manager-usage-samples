@@ -27,8 +27,9 @@ func GetSecret(secretName string, secretRegion string) {
 
 	case "no":
 		fmt.Println("Looing for secret - ", secretName)
+		secretAwsSession := session.Must(session.NewSession())
 		svc := secretsmanager.New(
-			session.New(),
+			secretAwsSession,
 			aws.NewConfig().WithRegion(secretRegion),
 		)
 		input := &secretsmanager.GetSecretValueInput{
