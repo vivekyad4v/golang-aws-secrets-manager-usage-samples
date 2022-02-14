@@ -19,14 +19,13 @@ func main() {
 	// Environment variables to be exported - ORG_ID, ENVIRON, PROJECT_NAME, AWS_DEFAULT_REGION, RUNNING_ON_LOCAL(yes, no)
 	secretName := "/" + os.Getenv("ORG_ID") + "/" + os.Getenv("ENVIRON") + "/" + os.Getenv("PROJECT_NAME") + "-secrets" // Ex - /myorg/stg/testproject-secrets
 	secretRegion := os.Getenv("AWS_DEFAULT_REGION")
-	getConfig := GetSecret(secretName, secretRegion)
+	getInitConfig := GetSecret(secretName, secretRegion)
 
 	fmt.Println("Getting secrets from config struct")
-	fmt.Println(getConfig.DB_HOST)
-	fmt.Println(getConfig.DB_PASS)
+	fmt.Println(getInitConfig.DB_HOST)
+	fmt.Println(getInitConfig.DB_PASS)
 
 	fmt.Println("Getting secrets from environment variables")
-	fmt.Println(getConfig.DB_HOST)
 	fmt.Println(os.Getenv("DB_HOST"))
 	fmt.Println(os.Getenv("DB_PASS"))
 
