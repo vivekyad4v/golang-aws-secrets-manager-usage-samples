@@ -10,16 +10,29 @@ import (
 	"github.com/aws/aws-sdk-go/service/secretsmanager"
 )
 
-func main() {
-	// Environment variables to be exported - ORG_ID, ENVIRON, PROJECT_NAME, AWS_DEFAULT_REGION, RUNNING_ON_LOCAL(yes, no)
-	secretName := "/" + os.Getenv("ORG_ID") + "/" + os.Getenv("ENVIRON") + "/" + os.Getenv("PROJECT_NAME") + "-secrets" // Ex - /myorg/stg/testsecret-secrets
-	secretRegion := os.Getenv("AWS_DEFAULT_REGION")
-	GetSecret(secretName, secretRegion)
-
-	fmt.Println(os.Getenv("TEST"))
+type initConfig struct {
+	DB_HOST string
+	DB_PASS string
 }
 
-func GetSecret(secretName string, secretRegion string) {
+func main() {
+	// Environment variables to be exported - ORG_ID, ENVIRON, PROJECT_NAME, AWS_DEFAULT_REGION, RUNNING_ON_LOCAL(yes, no)
+	secretName := "/" + os.Getenv("ORG_ID") + "/" + os.Getenv("ENVIRON") + "/" + os.Getenv("PROJECT_NAME") + "-secrets" // Ex - /myorg/stg/testproject-secrets
+	secretRegion := os.Getenv("AWS_DEFAULT_REGION")
+	getConfig := GetSecret(secretName, secretRegion)
+
+	fmt.Println("Getting secrets from config struct")
+	fmt.Println(getConfig.DB_HOST)
+	fmt.Println(getConfig.DB_PASS)
+
+	fmt.Println("Getting secrets from environment variables")
+	fmt.Println(getConfig.DB_HOST)
+	fmt.Println(os.Getenv("DB_HOST"))
+	fmt.Println(os.Getenv("DB_PASS"))
+
+}
+
+func GetSecret(secretName string, secretRegion string) (secretsMapInitConfig initConfig) {
 
 	versionStage := "AWSCURRENT"
 
@@ -46,13 +59,18 @@ func GetSecret(secretName string, secretRegion string) {
 			secretString = *result.SecretString
 
 			//Use secrets manager directly
-			var secretsMap map[string]interface{}
-			json.Unmarshal([]byte(secretString), &secretsMap)
+			var secretsMapEnv map[string]interface{}
+			json.Unmarshal([]byte(secretString), &secretsMapEnv)
+
+			// Return the struct
+			json.Unmarshal([]byte(secretString), &secretsMapInitConfig)
 
 			// pass secret manager key values as environment variable
-			for k, v := range secretsMap {
+			for k, v := range secretsMapEnv {
 				os.Setenv(k, fmt.Sprint(v))
 			}
+			return secretsMapInitConfig
+
 		} else {
 			fmt.Println("Secret is empty.")
 		}
@@ -63,4 +81,6 @@ func GetSecret(secretName string, secretRegion string) {
 	default:
 		fmt.Println("Environment variable RUNNING_ON_LOCAL not set OR it has a wrong value")
 	}
+
+	return secretsMapInitConfig
 }
