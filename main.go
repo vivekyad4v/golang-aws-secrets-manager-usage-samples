@@ -23,11 +23,9 @@ func main() {
 
 	fmt.Println("Getting secrets from config struct")
 	fmt.Println(getInitConfig.DB_HOST)
-	fmt.Println(getInitConfig.DB_PASS)
 
 	fmt.Println("Getting secrets from environment variables")
 	fmt.Println(os.Getenv("DB_HOST"))
-	fmt.Println(os.Getenv("DB_PASS"))
 
 }
 
